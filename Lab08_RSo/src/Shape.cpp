@@ -9,6 +9,21 @@
 
 using namespace std;
 
+Shape::Shape(bool textured) :
+	eleBufID(0),
+	posBufID(0),
+	norBufID(0),
+	texBufID(0), 
+   vaoID(0)
+{
+	min = glm::vec3(0);
+	max = glm::vec3(0);
+	texOff = !textured;
+}
+
+Shape::~Shape()
+{
+}
 
 // copy the data from the shape to this object
 void Shape::createShape(tinyobj::shape_t & shape)
@@ -72,7 +87,7 @@ void Shape::init()
 	}
 
 	// Send the texture array to the GPU
-	if (texBuf.empty())
+	if (texBuf.empty() || texOff)
 	{
 		texBufID = 0;
 	}

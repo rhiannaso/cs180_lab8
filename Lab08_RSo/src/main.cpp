@@ -40,6 +40,7 @@ public:
 
 	// Shape to be used (from  file) - modify to support multiple
 	shared_ptr<Shape> sphere;
+    vector<shared_ptr<Shape>> fountainMesh;
 
 	// OpenGL handle to texture data used in particle
 	shared_ptr<Texture> texture;
@@ -159,7 +160,7 @@ public:
 		meshProg->addAttribute("vertPos");
 		meshProg->addAttribute("vertNor");
 
-		thePartSystem = new particleSys(vec3(0, 0, 0));
+		thePartSystem = new particleSys(vec3(0, 0.45, 0));
 		thePartSystem->gpuSetup();
 	}
 
@@ -177,13 +178,25 @@ public:
 		if (!rc) {
 			cerr << errStr << endl;
 		} else {
-			sphere = make_shared<Shape>();
+			sphere = make_shared<Shape>(false);
 			sphere->createShape(TOshapes[0]);
 			sphere->measure();
 			sphere->init();
 		}
-		//read out information stored in the shape about its size - something like this...
 
+		rc = tinyobj::LoadObj(TOshapes, objMaterials, errStr, (resourceDirectory + "/fountain.obj").c_str());
+		if (!rc) {
+			cerr << errStr << endl;
+		} else {
+			for (int i = 0; i < TOshapes.size(); i++) {
+                shared_ptr<Shape> tmp = make_shared<Shape>(false);
+                tmp->createShape(TOshapes[i]);
+                tmp->measure();
+                tmp->init();
+
+                fountainMesh.push_back(tmp);
+            }
+		}
 	}
 
 	// Code to load in the texture
@@ -199,10 +212,10 @@ public:
     void setMaterial(shared_ptr<Program> prog, int i) {
     	switch (i) {
     		case 0: //purple
-    			glUniform3f(prog->getUniform("MatAmb"), 0.096, 0.046, 0.095);
-    			glUniform3f(prog->getUniform("MatDif"), 0.96, 0.46, 0.95);
-    			glUniform3f(prog->getUniform("MatSpec"), 0.45, 0.23, 0.45);
-    			glUniform1f(prog->getUniform("MatShine"), 120.0);
+    			glUniform3f(prog->getUniform("MatAmb"), 0.24725f, 0.1995f, 0.0745f);
+    			glUniform3f(prog->getUniform("MatDif"), 0.75164f, 0.60648f, 0.22648f);
+    			glUniform3f(prog->getUniform("MatSpec"), 0.628281f, 0.555802f, 0.366065f);
+    			glUniform1f(prog->getUniform("MatShine"), 51.2f);
     		break;
   		}
 	}
@@ -251,9 +264,14 @@ public:
 			//"global" translate
 			M->pushMatrix();
 				M->scale(vec3(0.5, 0.5, 0.5));
+                M->rotate(3.14, vec3(0, 0, 1));
+                M->translate(vec3(-0.5, 0, 0));
                 setMaterial(meshProg, 0);
 				glUniformMatrix4fv(meshProg->getUniform("M"), 1, GL_FALSE, value_ptr(M->topMatrix()));
-				sphere->draw(meshProg);
+				// sphere->draw(meshProg);
+                for (int i=0; i < fountainMesh.size(); i++) {
+                    fountainMesh[i]->draw(meshProg);
+                }
 			M->popMatrix();
 		M->popMatrix();
 
@@ -266,7 +284,7 @@ public:
 		CHECKED_GL_CALL(glUniformMatrix4fv(partProg->getUniform("V"), 1, GL_FALSE, value_ptr(V->topMatrix())));
 		CHECKED_GL_CALL(glUniformMatrix4fv(partProg->getUniform("M"), 1, GL_FALSE, value_ptr(M->topMatrix())));
 		
-		CHECKED_GL_CALL(glUniform3f(partProg->getUniform("pColor"), 0.9, 0.7, 0.7));
+		CHECKED_GL_CALL(glUniform3f(partProg->getUniform("pColor"), 0.5, 0.7, 0.9));
 		
 		thePartSystem->drawMe(partProg);
 		thePartSystem->update();

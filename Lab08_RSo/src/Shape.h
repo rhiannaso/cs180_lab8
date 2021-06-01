@@ -17,7 +17,8 @@ class Shape
 {
 
 public:
-
+    Shape(bool textured);
+	virtual ~Shape();
 	void createShape(tinyobj::shape_t & shape);
 	void init();
 	void measure();
@@ -37,7 +38,7 @@ private:
 	unsigned int norBufID = 0;
 	unsigned int texBufID = 0;
 	unsigned int vaoID = 0;
-
+    bool texOff;
 };
 
 #endif // LAB471_SHAPE_H_INCLUDED
