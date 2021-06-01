@@ -151,6 +151,11 @@ public:
 		meshProg->addUniform("P");
 		meshProg->addUniform("M");
 		meshProg->addUniform("V");
+        meshProg->addUniform("MatAmb");
+		meshProg->addUniform("MatDif");
+		meshProg->addUniform("MatSpec");
+		meshProg->addUniform("MatShine");
+		meshProg->addUniform("lightPos");
 		meshProg->addAttribute("vertPos");
 		meshProg->addAttribute("vertNor");
 
@@ -191,6 +196,17 @@ public:
 		texture->setWrapModes(GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE);
 	}
 
+    void setMaterial(shared_ptr<Program> prog, int i) {
+    	switch (i) {
+    		case 0: //purple
+    			glUniform3f(prog->getUniform("MatAmb"), 0.096, 0.046, 0.095);
+    			glUniform3f(prog->getUniform("MatDif"), 0.96, 0.46, 0.95);
+    			glUniform3f(prog->getUniform("MatSpec"), 0.45, 0.23, 0.45);
+    			glUniform1f(prog->getUniform("MatShine"), 120.0);
+    		break;
+  		}
+	}
+
 	void render()
 	{
 		// Get current frame buffer size.
@@ -228,13 +244,14 @@ public:
 		meshProg->bind();
 		CHECKED_GL_CALL(glUniformMatrix4fv(meshProg->getUniform("P"), 1, GL_FALSE, value_ptr(P->topMatrix())));
 		CHECKED_GL_CALL(glUniformMatrix4fv(meshProg->getUniform("V"), 1, GL_FALSE, value_ptr(V->topMatrix())));
-
+        CHECKED_GL_CALL(glUniform3f(meshProg->getUniform("lightPos"), 2, 2, 2));
 		// draw mesh 
 		M->pushMatrix();
 			M->loadIdentity();
 			//"global" translate
 			M->pushMatrix();
 				M->scale(vec3(0.5, 0.5, 0.5));
+                setMaterial(meshProg, 0);
 				glUniformMatrix4fv(meshProg->getUniform("M"), 1, GL_FALSE, value_ptr(M->topMatrix()));
 				sphere->draw(meshProg);
 			M->popMatrix();
