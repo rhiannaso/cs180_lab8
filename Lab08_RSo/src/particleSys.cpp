@@ -108,15 +108,15 @@ void particleSys::update() {
 
   //go through all the particles and update the CPU buffer
    for (int i = 0; i < numP; i++) {
-        int div1, div2;
+        float div1, div2;
         if (i < 10) {
-            div1 = 1;
+            div1 = 1.5;
             div2 = 5;
         } else if (i > 9 && i < 100) {
-            div1 = 10;
+            div1 = 15;
             div2 = 50;
         } else {
-            div1 = 100;
+            div1 = 150;
             div2 = 500;
         }
         pos = particles[i]->getPosition();
@@ -125,10 +125,14 @@ void particleSys::update() {
         points[i*3+1] =pos.y; 
         points[i*3+2] =pos.z; 
 	    // To do - how can you integrate unique colors per particle?
-        pointColors[i*4+0] = col.r*((float)i/div1); 
-        pointColors[i*4+1] = col.g*((float)i/div1); 
-        pointColors[i*4+2] = col.b*((float)i/div2);
+        pointColors[i*4+0] = col.r*(i/div1) + 0.1; 
+        pointColors[i*4+1] = col.g*(i/div1) + 0.1; 
+        pointColors[i*4+2] = col.b*(i/div2) + 0.1;
         pointColors[i*4+3] = col.a/t;
+        // pointColors[i*4+0] = col.r*((float)i/div1); 
+        // pointColors[i*4+1] = col.g*((float)i/div1); 
+        // pointColors[i*4+2] = col.b*((float)i/div2);
+        // pointColors[i*4+3] = col.a/t;
         // pointColors[i*4+0] = col.r + col.a/10; 
         // pointColors[i*4+1] = col.g + col.g/10; 
         // pointColors[i*4+2] = col.b + col.b/10;

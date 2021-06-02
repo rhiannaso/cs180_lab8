@@ -161,7 +161,7 @@ public:
 		meshProg->addAttribute("vertPos");
 		meshProg->addAttribute("vertNor");
 
-		thePartSystem = new particleSys(vec3(0, 0.45, 0));
+		thePartSystem = new particleSys(vec3(0, 0.4, 0));
 		thePartSystem->gpuSetup();
 	}
 
