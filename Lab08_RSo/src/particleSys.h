@@ -36,9 +36,11 @@ private:
 	ParticleSorter sorter;
 	//this is not great that this is hard coded - you can make it better
 	GLfloat points[900];
+    GLfloat pointColors[1200];
 	mat4 theCamera;
 	unsigned vertArrObj;
 	unsigned vertBuffObj;
+    unsigned colorbuffer;
 	
 public:
 	particleSys(vec3 source);

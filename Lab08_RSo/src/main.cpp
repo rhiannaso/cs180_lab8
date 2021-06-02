@@ -134,9 +134,10 @@ public:
 		partProg->addUniform("P");
 		partProg->addUniform("M");
 		partProg->addUniform("V");
-		partProg->addUniform("pColor");
+		//partProg->addUniform("pColor");
 		partProg->addUniform("alphaTexture");
 		partProg->addAttribute("vertPos");
+        partProg->addAttribute("pColor");
 
 				// Initialize the GLSL program.
 		meshProg = make_shared<Program>();
@@ -284,7 +285,7 @@ public:
 		CHECKED_GL_CALL(glUniformMatrix4fv(partProg->getUniform("V"), 1, GL_FALSE, value_ptr(V->topMatrix())));
 		CHECKED_GL_CALL(glUniformMatrix4fv(partProg->getUniform("M"), 1, GL_FALSE, value_ptr(M->topMatrix())));
 		
-		CHECKED_GL_CALL(glUniform3f(partProg->getUniform("pColor"), 0.5, 0.7, 0.9));
+		//CHECKED_GL_CALL(glUniform3f(partProg->getUniform("pColor"), 0.5, 0.7, 0.9));
 		
 		thePartSystem->drawMe(partProg);
 		thePartSystem->update();

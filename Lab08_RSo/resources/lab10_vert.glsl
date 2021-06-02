@@ -1,15 +1,16 @@
 #version 330 core
 
 layout(location = 0) in vec3 vertPos;
+layout(location = 1) in vec4 pColor;
 
 uniform mat4 P;
 uniform mat4 M;
 uniform mat4 V;
 
 //replace with an attribute
-uniform vec3 pColor;
+//uniform vec3 pColor;
 
-out vec3 partCol;
+out vec4 partCol;
 
 
 void main()

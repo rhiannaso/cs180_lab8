@@ -2,7 +2,7 @@
 
 uniform sampler2D alphaTexture;
 
-in vec3 partCol;
+in vec4 partCol;
 
 out vec4 outColor;
 
@@ -11,5 +11,5 @@ void main()
 {
 	float alpha = texture(alphaTexture, gl_PointCoord).r;
 
-	outColor = vec4(partCol, alpha);
+	outColor = vec4(partCol.rgb, (alpha*partCol.a));
 }
