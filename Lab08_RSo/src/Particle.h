@@ -27,7 +27,7 @@ class Particle
 public:
 	Particle(vec3 pos);
 	virtual ~Particle();
-	void load(vec3 start);
+	void load(vec3 start, float t);
 	void rebirth(float t, vec3 start);
 	void update(float t, float h, const glm::vec3 &g, const vec3 start);
 	const vec3 &getPosition() const { return x; };
@@ -44,6 +44,7 @@ private:
 	float tEnd;     // time this particle dies
 	float scale;
 	vec4 color;
+    float spawn;
 };
 
 #endif // LAB471_PARTICLE_H_INCLUDED

@@ -34,10 +34,11 @@ Particle::~Particle()
 {
 }
 
-void Particle::load(vec3 start)
+void Particle::load(vec3 start, float t)
 {
 	// Random initialization
-	rebirth(0.0f, start);
+    spawn = randFloat(0.0f, 3.0f);
+	rebirth(t+spawn, start);
 }
 
 /* all particles born at the origin */
@@ -48,31 +49,26 @@ void Particle::rebirth(float t, vec3 start)
   	d = randFloat(0.0f, 0.02f);
 	x = start;
 	v.x = randFloat(-0.25f, 0.25f);
-	v.y = randFloat(0.025f, 0.4f);
+	v.y = randFloat(0.1f, 0.5f);
 	v.z = randFloat(-0.25f, 0.25f);
-	lifespan = randFloat(100.0f, 200.0f); 
+    lifespan = randFloat(3.0f, 5.0f);
 	tEnd = t + lifespan;
 	scale = randFloat(0.2, 1.0f);
-   	color.r = randFloat(0.0f, 0.1f);
-   	color.g = randFloat(0.0f, 0.1f);
-   	color.b = randFloat(0.25f, 0.5f);
+    color.r = randFloat(0.5f, 0.75f);
+   	color.g = randFloat(0.5f, 0.75f);
+   	color.b = randFloat(0.5f, 0.75f);
 	color.a = 1.0f;
 }
 
 void Particle::update(float t, float h, const vec3 &g, const vec3 start)
 {
-	if(t > tEnd) {
-		rebirth(t, start);
-	}
+    if (t > spawn) {
+        if(t > tEnd - (lifespan/1.4)) {
+            rebirth(t, start);
+        }
 
-	//very simple update
-	// x += h*v;
-    // x.x = h + (v.x*t) + (0.5*(g.x)*t*t);
-    // x.y = h + (v.y*t) + (0.5*(g.y)*t*t);
-    // x.z = h + (v.z*t) + (0.5*(g.z)*t*t);
-    x.x += (0.07*(h + (v.x*t) + (0.5*(g.x)*t*t)));
-    x.y += (0.07*(h + (v.y*t) + (0.5*(g.y)*t*t)));
-    x.z += (0.07*(h + (v.z*t) + (0.5*(g.z)*t*t)));
-	//To do - how do you want to update the forces?
-	color.a = (tEnd-t)/lifespan;
+        v += (0.1f*g);
+        x += (0.1f*v);
+        color.a = (tEnd-t)/lifespan;
+    }
 }
